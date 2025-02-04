@@ -36,7 +36,7 @@ public class ScoreBoardTest {
 
         //THEN
         assertEquals(1, scoreBoard.getScoreBoardSummary().size());
-        assertEquals(HOME_TEAM + " 0 - " + AWAY_TEAM + " 0",
+        assertEquals(HOME_TEAM + " 1 - " + AWAY_TEAM + " 1",
                 scoreBoard.getScoreBoardSummary().getFirst().toString());
 
     }
