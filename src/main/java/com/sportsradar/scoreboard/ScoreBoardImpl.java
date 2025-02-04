@@ -1,14 +1,16 @@
 package com.sportsradar.scoreboard;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class ScoreBoardImpl implements ScoreBoard {
     private final List<Match> ongoingMatches = new ArrayList<>();
 
     @Override
     public void startNewMatch(String homeTeam, String awayTeam) {
-        ongoingMatches.add(new Match(homeTeam, awayTeam, 0, 0, System.currentTimeMillis()));
+        ongoingMatches.add(new Match(homeTeam, awayTeam, 0, 0, System.nanoTime()));
     }
 
     @Override
@@ -26,7 +28,17 @@ public class ScoreBoardImpl implements ScoreBoard {
 
     @Override
     public List<Match> getScoreBoardSummary() {
-        return ongoingMatches;
+        Comparator<Match> scoreComparator = Comparator
+                .comparing( (Match match) -> match.homeScore() + match.awayScore())
+                .reversed();
+
+        Comparator<Match> startTimeComparator = Comparator
+                .comparing(Match::startTime)
+                .reversed();
+
+        return ongoingMatches.stream()
+                .sorted(scoreComparator.thenComparing(startTimeComparator))
+                .collect(Collectors.toList());
     }
 
     private static class MatchFinder {

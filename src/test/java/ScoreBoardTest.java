@@ -1,7 +1,10 @@
+import com.sportsradar.scoreboard.Match;
 import com.sportsradar.scoreboard.ScoreBoard;
 import com.sportsradar.scoreboard.ScoreBoardImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -67,11 +70,12 @@ public class ScoreBoardTest {
         scoreBoard.updateScore(HOME_TEAM+"2", AWAY_TEAM+"2", 0, 10);
 
         //When & Then
-        assertEquals(4, scoreBoard.getScoreBoardSummary().size());
-        assertEquals("HomeTeam2 0 - AwayTeam2 10", scoreBoard.getScoreBoardSummary().getFirst().toString());
-        assertEquals("HomeTeam3 0 - AwayTeam3 0", scoreBoard.getScoreBoardSummary().get(1).toString());
-        assertEquals("HomeTeam1 0 - AwayTeam1 0", scoreBoard.getScoreBoardSummary().get(2).toString());
-        assertEquals("HomeTeam 0 - AwayTeam 0", scoreBoard.getScoreBoardSummary().get(3).toString());
+        List<Match> scoreBoardSummary = scoreBoard.getScoreBoardSummary();
+        assertEquals(4, scoreBoardSummary.size());
+        assertEquals("HomeTeam2 0 - AwayTeam2 10", scoreBoardSummary.getFirst().toString());
+        assertEquals("HomeTeam3 0 - AwayTeam3 0", scoreBoardSummary.get(1).toString());
+        assertEquals("HomeTeam1 0 - AwayTeam1 0", scoreBoardSummary.get(2).toString());
+        assertEquals("HomeTeam 0 - AwayTeam 0", scoreBoardSummary.get(3).toString());
 
     }
 
