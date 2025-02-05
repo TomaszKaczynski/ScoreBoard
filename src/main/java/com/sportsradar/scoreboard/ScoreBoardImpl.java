@@ -11,6 +11,7 @@ public class ScoreBoardImpl implements ScoreBoard {
     @Override
     public void startNewMatch(String homeTeam, String awayTeam) {
         MatchDataValidator.validateTeamNamesAreNotNullOrEmpty(homeTeam, awayTeam);
+        MatchDataValidator.validateTeamsAreNotPresentOnScoreboard(homeTeam, awayTeam, ongoingMatches);
         ongoingMatches.add(new Match(homeTeam, awayTeam, 0, 0, System.nanoTime()));
     }
 
@@ -50,10 +51,23 @@ public class ScoreBoardImpl implements ScoreBoard {
     }
 
     private static class MatchDataValidator {
+
         public static void validateTeamNamesAreNotNullOrEmpty(String homeTeamName, String awayTeamName) {
             if (homeTeamName == null || homeTeamName.isBlank()
                     || awayTeamName == null || awayTeamName.isBlank()) {
                 throw new IllegalArgumentException("Team name can't be null or empty.");
+            }
+        }
+
+        public static void validateTeamsAreNotPresentOnScoreboard(String homeTeamName, String awayTeamName, List<Match> ongoingMatches) {
+            String message = " is already on the board. Can't add it to the board.";
+            if (ongoingMatches.stream()
+                    .anyMatch(match -> match.homeTeamName().equals(homeTeamName) || match.awayTeamName().equals(homeTeamName))) {
+                throw new IllegalArgumentException(homeTeamName + message);
+            }
+            if (ongoingMatches.stream()
+                    .anyMatch(match -> match.homeTeamName().equals(awayTeamName) || match.awayTeamName().equals(awayTeamName))) {
+                throw new IllegalArgumentException(awayTeamName + message);
             }
         }
     }

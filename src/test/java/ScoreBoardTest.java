@@ -109,7 +109,7 @@ public class ScoreBoardTest {
 
     @ParameterizedTest
     @MethodSource("provideHomeAndAwayTeamNames")
-    public void newMatchShouldNotBeBetweenTeamsThatAreAlreadyOnBoardTest(String homeTeam, String awayTeam, String existingOnBoard) {
+    public void shouldNotAddMatchIfTeamExistsTest(String homeTeam, String awayTeam, String existingOnBoard) {
         //Given
         scoreBoard.startNewMatch(HOME_TEAM, AWAY_TEAM);
 
