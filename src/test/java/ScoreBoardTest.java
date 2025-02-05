@@ -119,6 +119,7 @@ public class ScoreBoardTest {
         assertEquals(existingOnBoard + " is already on the board. Can't add it to the board.", exception.getMessage());
     }
 
+    @Test
     public void homeTeamNameAndAwayTeamNameShouldNotBeTheSame() {
         //When & Then
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class ,
@@ -150,15 +151,40 @@ public class ScoreBoardTest {
         return Stream.of(
                 Arguments.of(null, AWAY_TEAM),
                 Arguments.of(HOME_TEAM, null),
-                Arguments.of(null, null)
+                Arguments.of(null, null),
+                Arguments.of("", AWAY_TEAM),
+                Arguments.of(HOME_TEAM, ""),
+                Arguments.of("", "")
         );
     }
 
     @ParameterizedTest
     @MethodSource("provideNullTeamNameValue")
     public void startNewMatchShouldNotAllowNullTeamNameValuesTest(String homeTeam, String awayTeam) {
+        //When & Then
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
                 () -> scoreBoard.startNewMatch(homeTeam, awayTeam));
+        assertEquals("Team name can't be null or empty.", exception.getMessage());
+    }
+
+    @ParameterizedTest
+    @MethodSource("provideNullTeamNameValue")
+    public void updateScoreShouldNotAllowNullTeamNameValuesTest(String homeTeam, String awayTeam) {
+        //Given
+        scoreBoard.startNewMatch(HOME_TEAM, AWAY_TEAM);
+
+        //When & Then
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
+                () -> scoreBoard.updateScore(homeTeam, awayTeam, 1, 1));
+        assertEquals("Team name can't be null or empty.", exception.getMessage());
+    }
+
+    @ParameterizedTest
+    @MethodSource("provideNullTeamNameValue")
+    public void finishMatchShouldNotAllowNullTeamNameValuesTest(String homeTeam, String awayTeam) {
+        //When & Then
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
+                () -> scoreBoard.finishMatch(homeTeam, awayTeam));
         assertEquals("Team name can't be null or empty.", exception.getMessage());
     }
 
