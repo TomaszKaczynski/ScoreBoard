@@ -48,7 +48,7 @@ public class ScoreBoardTest {
     }
 
     @Test
-    public void matchShouldNotBeUpdatedIfItDoesntExist() {
+    public void matchShouldNotBeUpdatedIfItDoesntExistTest() {
         //When & Then
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
                 () -> scoreBoard.updateScore(HOME_TEAM, AWAY_TEAM, 1, 1));
@@ -71,7 +71,18 @@ public class ScoreBoardTest {
     }
 
     @Test
-    public void matchShouldNotBeFinishedIfItDoesntExist() {
+    public void cannotFinishAlreadyFinishedMatchTest() {
+        //Given
+        scoreBoard.startNewMatch(HOME_TEAM, AWAY_TEAM);
+        scoreBoard.startNewMatch(HOME_TEAM+"1", AWAY_TEAM+"1");
+        scoreBoard.finishMatch(HOME_TEAM, AWAY_TEAM);
+        //When & Then
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> scoreBoard.finishMatch(HOME_TEAM, AWAY_TEAM));
+        assertEquals("No match found for HomeTeam and AwayTeam", exception.getMessage());
+    }
+
+    @Test
+    public void matchShouldNotBeFinishedIfItDoesntExistTest() {
         //When & Then
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
                 () -> scoreBoard.finishMatch(HOME_TEAM, AWAY_TEAM));
@@ -97,6 +108,13 @@ public class ScoreBoardTest {
         assertEquals("HomeTeam 0 - AwayTeam 0", scoreBoardSummary.get(3).toString());
     }
 
+    @Test
+    public void scoreBoardSummaryShouldWorkEvenWithoutOngoingMatchesTest() {
+        //When & Then
+        List<Match> scoreBoardSummary = scoreBoard.getScoreBoardSummary();
+        assertTrue(scoreBoardSummary.isEmpty());
+    }
+
     private static Stream<Arguments> provideHomeAndAwayTeamNames() {
         var otherTeamName = "OtherTeam";
         return Stream.of(
@@ -120,10 +138,18 @@ public class ScoreBoardTest {
     }
 
     @Test
-    public void homeTeamNameAndAwayTeamNameShouldNotBeTheSame() {
+    public void homeTeamNameAndAwayTeamNameShouldNotBeTheSameTest() {
         //When & Then
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class ,
                 () -> scoreBoard.startNewMatch(HOME_TEAM, HOME_TEAM));
+        assertEquals("HomeTeam name and AwayTeam name can't be the same.", exception.getMessage());
+    }
+
+    @Test
+    public void homeTeamNameAndAwayTeamNameShouldNotBeTheSameIgnoreCaseTest() {
+        //When & Then
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class ,
+                () -> scoreBoard.startNewMatch(HOME_TEAM, HOME_TEAM.toLowerCase()));
         assertEquals("HomeTeam name and AwayTeam name can't be the same.", exception.getMessage());
     }
 
@@ -147,20 +173,23 @@ public class ScoreBoardTest {
         assertEquals("One of team scores is negative. Can't update match.", exception.getMessage());
     }
 
-    private static Stream<Arguments> provideNullTeamNameValue() {
+    private static Stream<Arguments> provideNullOrEmptyTeamNameValue() {
         return Stream.of(
                 Arguments.of(null, AWAY_TEAM),
                 Arguments.of(HOME_TEAM, null),
                 Arguments.of(null, null),
                 Arguments.of("", AWAY_TEAM),
                 Arguments.of(HOME_TEAM, ""),
-                Arguments.of("", "")
+                Arguments.of("", ""),
+                Arguments.of("   ", AWAY_TEAM),
+                Arguments.of(HOME_TEAM, "   "),
+                Arguments.of("   ", "   ")
         );
     }
 
     @ParameterizedTest
-    @MethodSource("provideNullTeamNameValue")
-    public void startNewMatchShouldNotAllowNullTeamNameValuesTest(String homeTeam, String awayTeam) {
+    @MethodSource("provideNullOrEmptyTeamNameValue")
+    public void startNewMatchShouldNotAllowNullOrEmptyTeamNameValuesTest(String homeTeam, String awayTeam) {
         //When & Then
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
                 () -> scoreBoard.startNewMatch(homeTeam, awayTeam));
@@ -168,7 +197,7 @@ public class ScoreBoardTest {
     }
 
     @ParameterizedTest
-    @MethodSource("provideNullTeamNameValue")
+    @MethodSource("provideNullOrEmptyTeamNameValue")
     public void updateScoreShouldNotAllowNullTeamNameValuesTest(String homeTeam, String awayTeam) {
         //Given
         scoreBoard.startNewMatch(HOME_TEAM, AWAY_TEAM);
@@ -180,7 +209,7 @@ public class ScoreBoardTest {
     }
 
     @ParameterizedTest
-    @MethodSource("provideNullTeamNameValue")
+    @MethodSource("provideNullOrEmptyTeamNameValue")
     public void finishMatchShouldNotAllowNullTeamNameValuesTest(String homeTeam, String awayTeam) {
         //When & Then
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
