@@ -25,6 +25,7 @@ public class ScoreBoardImpl implements ScoreBoard {
     @Override
     public void updateScore(String homeTeam, String awayTeam, int homeTeamScore, int awayTeamScore) {
         MatchDataValidator.validateTeamNamesAreNotNullOrEmpty(homeTeam, awayTeam);
+        MatchDataValidator.validateIfScoreUpdateValueIsNegative(homeTeamScore, awayTeamScore);
         Match matchToBeUpdated = MatchFinder.findMatch(homeTeam, awayTeam, ongoingMatches);
         Match updatedMatch = new Match(homeTeam, awayTeam, homeTeamScore, awayTeamScore, matchToBeUpdated.startTime());
         ongoingMatches.remove(matchToBeUpdated);
@@ -77,5 +78,12 @@ public class ScoreBoardImpl implements ScoreBoard {
                 throw new IllegalArgumentException("HomeTeam name and AwayTeam name can't be the same.");
             }
         }
+
+        public static void validateIfScoreUpdateValueIsNegative(int homeTeamScore, int awayTeamScore) {
+            if (homeTeamScore < 0 || awayTeamScore < 0) {
+                throw new IllegalArgumentException("One of team scores is negative. Can't update match.");
+            }
+        }
+
     }
 }
