@@ -11,6 +11,7 @@ public class ScoreBoardImpl implements ScoreBoard {
     @Override
     public void startNewMatch(String homeTeam, String awayTeam) {
         MatchDataValidator.validateTeamNamesAreNotNullOrEmpty(homeTeam, awayTeam);
+        MatchDataValidator.validateTeamsNamesAreNotSame(homeTeam, awayTeam);
         MatchDataValidator.validateTeamsAreNotPresentOnScoreboard(homeTeam, awayTeam, ongoingMatches);
         ongoingMatches.add(new Match(homeTeam, awayTeam, 0, 0, System.nanoTime()));
     }
@@ -68,6 +69,12 @@ public class ScoreBoardImpl implements ScoreBoard {
             if (ongoingMatches.stream()
                     .anyMatch(match -> match.homeTeamName().equals(awayTeamName) || match.awayTeamName().equals(awayTeamName))) {
                 throw new IllegalArgumentException(awayTeamName + message);
+            }
+        }
+
+        public static void validateTeamsNamesAreNotSame(String homeTeamName, String awayTeamName) {
+            if(homeTeamName.equals(awayTeamName)) {
+                throw new IllegalArgumentException("HomeTeam name and AwayTeam name can't be the same.");
             }
         }
     }
