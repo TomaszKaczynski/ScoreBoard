@@ -28,16 +28,9 @@ public class ScoreBoardImpl implements ScoreBoard {
 
     @Override
     public List<Match> getScoreBoardSummary() {
-        Comparator<Match> scoreComparator = Comparator
-                .comparing( (Match match) -> match.homeScore() + match.awayScore())
-                .reversed();
-
-        Comparator<Match> startTimeComparator = Comparator
-                .comparing(Match::startTime)
-                .reversed();
-
         return ongoingMatches.stream()
-                .sorted(scoreComparator.thenComparing(startTimeComparator))
+                .sorted(Comparator.comparing(  (Match match) -> match.homeScore() + match.awayScore()).reversed()
+                        .thenComparing(Match::startTime, Comparator.reverseOrder()))
                 .collect(Collectors.toList());
     }
 

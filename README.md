@@ -1,6 +1,6 @@
 
 # Assumptions:
-
+- I don't accept negative score update.
 
 # Important notes: 
 Using ```System.nanoTime()``` as its enough, 
