@@ -27,7 +27,12 @@ public class ScoreBoardImpl implements ScoreBoard {
         MatchDataValidator.validateTeamNamesAreNotNullOrEmpty(homeTeam, awayTeam);
         MatchDataValidator.validateIfScoreUpdateValueIsNegative(homeTeamScore, awayTeamScore);
         Match matchToBeUpdated = MatchFinder.findMatch(homeTeam, awayTeam, ongoingMatches);
-        Match updatedMatch = new Match(homeTeam, awayTeam, homeTeamScore, awayTeamScore, matchToBeUpdated.startTime());
+        Match updatedMatch =new Match(matchToBeUpdated.homeTeamName(),
+                matchToBeUpdated.awayTeamName(),
+                homeTeamScore,
+                awayTeamScore,
+                matchToBeUpdated.startTime());
+
         ongoingMatches.remove(matchToBeUpdated);
         ongoingMatches.add(updatedMatch);
     }
@@ -44,8 +49,8 @@ public class ScoreBoardImpl implements ScoreBoard {
 
         public static Match findMatch(String homeTeam, String awayTeam, List<Match> matches) {
             return matches.stream()
-                    .filter(match -> match.homeTeamName().equals(homeTeam)
-                            && match.awayTeamName().equals(awayTeam))
+                    .filter(match -> match.homeTeamName().equalsIgnoreCase(homeTeam)
+                            && match.awayTeamName().equalsIgnoreCase(awayTeam))
                     .findFirst()
                     .orElseThrow(() -> new IllegalArgumentException("No match found for " + homeTeam + " and " + awayTeam));
         }
