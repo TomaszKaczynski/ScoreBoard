@@ -10,16 +10,19 @@ public class ScoreBoardImpl implements ScoreBoard {
 
     @Override
     public void startNewMatch(String homeTeam, String awayTeam) {
+        MatchDataValidator.validateTeamNamesAreNotNullOrEmpty(homeTeam, awayTeam);
         ongoingMatches.add(new Match(homeTeam, awayTeam, 0, 0, System.nanoTime()));
     }
 
     @Override
     public void finishMatch(String homeTeam, String awayTeam) {
+        MatchDataValidator.validateTeamNamesAreNotNullOrEmpty(homeTeam, awayTeam);
         ongoingMatches.remove(MatchFinder.findMatch(homeTeam, awayTeam, ongoingMatches));
     }
 
     @Override
     public void updateScore(String homeTeam, String awayTeam, int homeTeamScore, int awayTeamScore) {
+        MatchDataValidator.validateTeamNamesAreNotNullOrEmpty(homeTeam, awayTeam);
         Match matchToBeUpdated = MatchFinder.findMatch(homeTeam, awayTeam, ongoingMatches);
         Match updatedMatch = new Match(homeTeam, awayTeam, homeTeamScore, awayTeamScore, matchToBeUpdated.startTime());
         ongoingMatches.remove(matchToBeUpdated);
@@ -44,5 +47,14 @@ public class ScoreBoardImpl implements ScoreBoard {
                     .orElseThrow(() -> new IllegalArgumentException("No match found for " + homeTeam + " and " + awayTeam));
         }
 
+    }
+
+    private static class MatchDataValidator {
+        public static void validateTeamNamesAreNotNullOrEmpty(String homeTeamName, String awayTeamName) {
+            if (homeTeamName == null || homeTeamName.isBlank()
+                    || awayTeamName == null || awayTeamName.isBlank()) {
+                throw new IllegalArgumentException("Team name can't be null or empty.");
+            }
+        }
     }
 }
