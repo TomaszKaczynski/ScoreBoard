@@ -13,9 +13,10 @@ import java.util.stream.Stream;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class ScoreBoardTest {
-    ScoreBoard scoreBoard;
     private static final String HOME_TEAM = "HomeTeam";
     private static final String AWAY_TEAM = "AwayTeam";
+
+    ScoreBoard scoreBoard;
 
     @BeforeEach
     public void setUp() {
@@ -33,13 +34,24 @@ public class ScoreBoardTest {
                 scoreBoard.getScoreBoardSummary().getFirst().toString());
     }
 
-    @Test
-    public void scoreForMatchShouldBeUpdatedTest() {
+    private static Stream<Arguments> provideHomeAndAwayTeamNamesIgnoreCase() {
+        return Stream.of(
+                Arguments.of(HOME_TEAM, AWAY_TEAM),
+                Arguments.of(HOME_TEAM.toLowerCase(), AWAY_TEAM),
+                Arguments.of(HOME_TEAM.toUpperCase(), AWAY_TEAM),
+                Arguments.of(HOME_TEAM, AWAY_TEAM.toLowerCase()),
+                Arguments.of(HOME_TEAM, AWAY_TEAM.toUpperCase())
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource("provideHomeAndAwayTeamNamesIgnoreCase")
+    public void scoreForMatchShouldBeUpdatedTest(String homeTeamName, String awayTeamName) {
         //Given
         scoreBoard.startNewMatch(HOME_TEAM, AWAY_TEAM);
 
         //When
-        scoreBoard.updateScore(HOME_TEAM, AWAY_TEAM, 1, 1);
+        scoreBoard.updateScore(homeTeamName, awayTeamName, 1, 1);
 
         //THEN
         assertEquals(1, scoreBoard.getScoreBoardSummary().size());
@@ -55,14 +67,15 @@ public class ScoreBoardTest {
         assertEquals("No match found for HomeTeam and AwayTeam", exception.getMessage());
     }
 
-    @Test
-    public void matchShouldBeFinishedTest() {
+    @ParameterizedTest
+    @MethodSource("provideHomeAndAwayTeamNamesIgnoreCase")
+    public void matchShouldBeFinishedTest(String homeTeamName, String awayTeamName) {
         //Given
         scoreBoard.startNewMatch(HOME_TEAM, AWAY_TEAM);
         scoreBoard.startNewMatch(HOME_TEAM+"1", AWAY_TEAM+"1");
 
         //When
-        scoreBoard.finishMatch(HOME_TEAM, AWAY_TEAM);
+        scoreBoard.finishMatch(homeTeamName, awayTeamName);
 
         //Then
         assertEquals(1, scoreBoard.getScoreBoardSummary().size());
@@ -121,7 +134,11 @@ public class ScoreBoardTest {
                 Arguments.of(HOME_TEAM, otherTeamName, HOME_TEAM),
                 Arguments.of(AWAY_TEAM, otherTeamName, AWAY_TEAM),
                 Arguments.of(otherTeamName, HOME_TEAM, HOME_TEAM),
-                Arguments.of(otherTeamName, AWAY_TEAM, AWAY_TEAM)
+                Arguments.of(otherTeamName, AWAY_TEAM, AWAY_TEAM),
+                Arguments.of(HOME_TEAM.toLowerCase(), otherTeamName, HOME_TEAM),
+                Arguments.of(AWAY_TEAM.toLowerCase(), otherTeamName, AWAY_TEAM),
+                Arguments.of(otherTeamName, HOME_TEAM.toUpperCase(), HOME_TEAM),
+                Arguments.of(otherTeamName, AWAY_TEAM.toUpperCase(), AWAY_TEAM)
         );
     }
 
