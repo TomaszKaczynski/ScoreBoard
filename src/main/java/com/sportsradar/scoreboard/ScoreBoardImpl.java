@@ -64,17 +64,17 @@ public class ScoreBoardImpl implements ScoreBoard {
         public static void validateTeamsAreNotPresentOnScoreboard(String homeTeamName, String awayTeamName, List<Match> ongoingMatches) {
             String message = " is already on the board. Can't add it to the board.";
             if (ongoingMatches.stream()
-                    .anyMatch(match -> match.homeTeamName().equals(homeTeamName) || match.awayTeamName().equals(homeTeamName))) {
+                    .anyMatch(match -> match.homeTeamName().equalsIgnoreCase(homeTeamName) || match.awayTeamName().equalsIgnoreCase(homeTeamName))) {
                 throw new IllegalArgumentException(homeTeamName + message);
             }
             if (ongoingMatches.stream()
-                    .anyMatch(match -> match.homeTeamName().equals(awayTeamName) || match.awayTeamName().equals(awayTeamName))) {
+                    .anyMatch(match -> match.homeTeamName().equalsIgnoreCase(awayTeamName) || match.awayTeamName().equalsIgnoreCase(awayTeamName))) {
                 throw new IllegalArgumentException(awayTeamName + message);
             }
         }
 
         public static void validateTeamsNamesAreNotSame(String homeTeamName, String awayTeamName) {
-            if(homeTeamName.equals(awayTeamName)) {
+            if(homeTeamName.equalsIgnoreCase(awayTeamName)) {
                 throw new IllegalArgumentException("HomeTeam name and AwayTeam name can't be the same.");
             }
         }
