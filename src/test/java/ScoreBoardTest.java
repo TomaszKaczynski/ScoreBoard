@@ -135,10 +135,10 @@ public class ScoreBoardTest {
                 Arguments.of(AWAY_TEAM, otherTeamName, AWAY_TEAM),
                 Arguments.of(otherTeamName, HOME_TEAM, HOME_TEAM),
                 Arguments.of(otherTeamName, AWAY_TEAM, AWAY_TEAM),
-                Arguments.of(HOME_TEAM.toLowerCase(), otherTeamName, HOME_TEAM),
-                Arguments.of(AWAY_TEAM.toLowerCase(), otherTeamName, AWAY_TEAM),
-                Arguments.of(otherTeamName, HOME_TEAM.toUpperCase(), HOME_TEAM),
-                Arguments.of(otherTeamName, AWAY_TEAM.toUpperCase(), AWAY_TEAM)
+                Arguments.of(HOME_TEAM.toLowerCase(), otherTeamName, HOME_TEAM.toLowerCase()),
+                Arguments.of(AWAY_TEAM.toLowerCase(), otherTeamName, AWAY_TEAM.toLowerCase()),
+                Arguments.of(otherTeamName, HOME_TEAM.toUpperCase(), HOME_TEAM.toUpperCase()),
+                Arguments.of(otherTeamName, AWAY_TEAM.toUpperCase(), AWAY_TEAM.toUpperCase())
         );
     }
 
