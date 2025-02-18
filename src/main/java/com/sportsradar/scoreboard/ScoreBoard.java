@@ -6,5 +6,6 @@ public interface ScoreBoard {
     void startNewMatch(String homeTeam, String awayTeam);
     void finishMatch(String homeTeam, String awayTeam);
     void updateScore(String homeTeam, String awayTeam, int homeTeamScore, int awayTeamScore);
+    int getScoreForTeam(String teamName);
     List<Match> getScoreBoardSummary();
 }

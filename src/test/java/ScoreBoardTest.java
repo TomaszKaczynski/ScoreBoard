@@ -234,4 +234,86 @@ public class ScoreBoardTest {
         assertEquals("Team name can't be null or empty.", exception.getMessage());
     }
 
+
+
+    @Test
+    public void getScoreForAwayTeamTest() {
+        //Given
+        scoreBoard.startNewMatch(HOME_TEAM, AWAY_TEAM);
+        scoreBoard.updateScore(HOME_TEAM, AWAY_TEAM, 5, 7);
+
+        //When
+        int scoreAway = scoreBoard.getScoreForTeam(AWAY_TEAM);
+
+        //Then
+        assertEquals(7, scoreAway);
+    }
+
+    @Test
+    public void getScoreForHomeTeamTest() {
+        //Given
+        scoreBoard.startNewMatch(HOME_TEAM, AWAY_TEAM);
+        scoreBoard.updateScore(HOME_TEAM, AWAY_TEAM, 5, 7);
+
+        //When
+        int scoreHome = scoreBoard.getScoreForTeam(HOME_TEAM);
+
+        //Then
+        assertEquals(5, scoreHome);
+    }
+
+    @Test
+    public void getScoreForHomeUpperCaseTeamTest() {
+        //Given
+        scoreBoard.startNewMatch(HOME_TEAM, AWAY_TEAM);
+        scoreBoard.updateScore(HOME_TEAM, AWAY_TEAM, 5, 7);
+
+        //When
+        int scoreHome = scoreBoard.getScoreForTeam(HOME_TEAM.toUpperCase());
+
+        //Then
+        assertEquals(5, scoreHome);
+    }
+
+    @Test
+    public void getScoreForAwayUpperCaseTeamTest() {
+        //Given
+        scoreBoard.startNewMatch(HOME_TEAM, AWAY_TEAM);
+        scoreBoard.updateScore(HOME_TEAM, AWAY_TEAM, 5, 7);
+
+        //When
+        int scoreHome = scoreBoard.getScoreForTeam(AWAY_TEAM.toUpperCase());
+
+        //Then
+        assertEquals(7, scoreHome);
+    }
+
+    @Test
+    public void getScoreForTeamThatDoesNotExistTest() {
+        //Given
+        scoreBoard.startNewMatch(HOME_TEAM, AWAY_TEAM);
+        scoreBoard.updateScore(HOME_TEAM, AWAY_TEAM, 5, 7);
+
+        //When
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
+                () -> scoreBoard.getScoreForTeam("NotExist"));
+
+        //Then
+        assertEquals("No match found for NotExist team.", exception.getMessage());
+    }
+
+    @Test
+    public void getScoreForTeamThatDoesNotExistOnEmptyScoreboardTest() {
+        //Given
+
+        //When
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
+                () -> scoreBoard.getScoreForTeam("NotExist"));
+
+        //Then
+        assertEquals("No match found for NotExist team.", exception.getMessage());
+    }
+
+
+
 }

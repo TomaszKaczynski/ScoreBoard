@@ -38,6 +38,16 @@ public class ScoreBoardImpl implements ScoreBoard {
     }
 
     @Override
+    public int getScoreForTeam(String teamName) {
+        Match m = ongoingMatches.stream()
+                .filter(match -> match.homeTeamName().equalsIgnoreCase(teamName) || match.awayTeamName().equalsIgnoreCase(teamName))
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("No match found for "+ teamName +" team."));
+
+        return teamName.equalsIgnoreCase(m.homeTeamName()) ? m.homeScore() : m.awayScore();
+    }
+
+    @Override
     public List<Match> getScoreBoardSummary() {
         return ongoingMatches.stream()
                 .sorted(Comparator.comparing(  (Match match) -> match.homeScore() + match.awayScore()).reversed()
